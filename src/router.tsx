@@ -7,18 +7,18 @@ import { routeTree } from './routeTree.gen'
 
 // Create a new router instance
 export const getRouter = () => {
-  const router = createRouter({
-    routeTree,
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
-  })
+	const router = createRouter({
+		routeTree,
+		scrollRestoration: true,
+		defaultPreloadStaleTime: 0,
+	})
 
-  if (!router.isServer) {
-    Sentry.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN,
-      integrations: [],
-    })
-  }
+	if (!router.isServer) {
+		Sentry.init({
+			dsn: import.meta.env.VITE_SENTRY_DSN,
+			integrations: [],
+		})
+	}
 
-  return router
+	return router
 }
