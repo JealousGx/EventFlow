@@ -164,7 +164,7 @@ function Index() {
 							initial={{ opacity: 0, y: 30 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.8, delay: 0.3 }}
-							className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-(--radius) overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
+							className="group relative px-8 py-4 bg-primary text-primary-foreground rounded overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
 						>
 							<Link
 								to="/dashboard"
@@ -323,7 +323,7 @@ function Index() {
 									viewport={{ once: true }}
 									transition={{ duration: 0.6, delay: index * 0.1 }}
 									whileHover={{ scale: 1.02 }}
-									className="relative p-8 bg-card/50 backdrop-blur-sm border border-border rounded-(--radius) overflow-hidden group"
+									className="relative p-8 bg-card/50 backdrop-blur-sm border border-border rounded overflow-hidden group"
 								>
 									{/* Glow effect */}
 									<motion.div
@@ -402,7 +402,7 @@ function Index() {
 							transition={{ delay: 0.2 }}
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
-							className="px-8 py-4 bg-primary text-primary-foreground rounded-(--radius) shadow-lg hover:shadow-xl transition-shadow"
+							className="px-8 py-4 bg-primary text-primary-foreground rounded shadow-lg hover:shadow-xl transition-shadow"
 						>
 							<Link to="/dashboard">Get Started Now</Link>
 						</motion.button>
