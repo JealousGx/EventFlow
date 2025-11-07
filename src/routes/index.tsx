@@ -1,118 +1,414 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import {
-  Zap,
-  Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
-  Sparkles,
+	ArrowRight,
+	BarChart3,
+	Brain,
+	CheckCircle,
+	Plus,
+	Sparkles,
+	Users,
+	Users2,
+	Zap,
 } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'motion/react'
+import { useRef } from 'react'
 
-export const Route = createFileRoute('/')({ component: App })
+const phases = [
+	{
+		id: 'create',
+		title: 'Create',
+		description: 'Define your event parameters and goals',
+		icon: Plus,
+		color: 'from-chart-1 to-chart-2',
+	},
+	{
+		id: 'generate',
+		title: 'Generate',
+		description: 'AI crafts an intelligent agenda',
+		icon: Sparkles,
+		color: 'from-chart-2 to-chart-3',
+	},
+	{
+		id: 'vote',
+		title: 'Vote',
+		description: 'Team collaborates and refines',
+		icon: Users,
+		color: 'from-chart-3 to-primary',
+	},
+	{
+		id: 'finalize',
+		title: 'Finalize',
+		description: 'Lock in and share your perfect event',
+		icon: CheckCircle,
+		color: 'from-primary to-secondary',
+	},
+]
 
-function App() {
-  const features = [
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
-      description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
-    },
-    {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
-      description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
-    },
-    {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
-      description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
-      description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
-      description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
-  ]
+const features = [
+	{
+		icon: Brain,
+		title: 'AI-Powered Generation',
+		description:
+			'Let AI create intelligent agendas based on your event goals and preferences.',
+		color: 'from-chart-2 to-chart-3',
+	},
+	{
+		icon: Users2,
+		title: 'Real-Time Collaboration',
+		description:
+			'Team members vote, suggest changes, and refine the agenda together.',
+		color: 'from-chart-1 to-chart-2',
+	},
+	{
+		icon: Zap,
+		title: 'Dynamic Timeline',
+		description:
+			'Drag, drop, and resize agenda items with intuitive visual controls.',
+		color: 'from-primary to-secondary',
+	},
+	{
+		icon: BarChart3,
+		title: 'Smart Insights',
+		description:
+			'Get analytics on voting patterns and optimize your event structure.',
+		color: 'from-secondary to-chart-3',
+	},
+]
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
-            </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
-            </p>
-          </div>
-        </div>
-      </section>
+export const Route = createFileRoute('/')({
+	component: Index,
+})
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  )
+function Index() {
+	const containerRef = useRef<HTMLDivElement>(null)
+	const { scrollYProgress } = useScroll({
+		target: containerRef,
+		offset: ['start end', 'end start'],
+	})
+
+	const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 1])
+	const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 1])
+
+	return (
+		<motion.div
+			key="landing"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ duration: 0.5 }}
+		>
+			<div className="fixed inset-0 bg-linear-to-br from-primary/10 via-background to-secondary/10" />
+
+			<motion.div
+				className="fixed top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/20 blur-3xl pointer-events-none"
+				animate={{
+					scale: [1, 1.2, 1],
+					opacity: [0.3, 0.5, 0.3],
+				}}
+				transition={{
+					duration: 8,
+					repeat: Infinity,
+					ease: 'easeInOut',
+				}}
+			/>
+			<motion.div
+				className="fixed bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-secondary/20 blur-3xl pointer-events-none"
+				animate={{
+					scale: [1, 1.3, 1],
+					opacity: [0.2, 0.4, 0.2],
+				}}
+				transition={{
+					duration: 10,
+					repeat: Infinity,
+					ease: 'easeInOut',
+					delay: 1,
+				}}
+			/>
+
+			<div className="relative z-10">
+				<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+					<div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+						<motion.div
+							initial={{ opacity: 0, y: 30 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.8 }}
+							className="flex items-center justify-center gap-2 mb-6"
+						>
+							<Sparkles className="w-6 h-6 text-primary" />
+							<span className="text-muted-foreground">
+								AI-Powered Event Planning
+							</span>
+						</motion.div>
+
+						<motion.h1
+							initial={{ opacity: 0, y: 30 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.8, delay: 0.1 }}
+							className="mb-6"
+						>
+							Plan smarter, together.
+						</motion.h1>
+
+						<motion.p
+							initial={{ opacity: 0, y: 30 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.8, delay: 0.2 }}
+							className="text-muted-foreground mb-12 max-w-2xl mx-auto"
+						>
+							Transform your events with AI-generated agendas, real-time
+							collaboration, and intelligent scheduling. No more endless
+							planning meetings.
+						</motion.p>
+
+						<motion.button
+							initial={{ opacity: 0, y: 30 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.8, delay: 0.3 }}
+							className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-(--radius) overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
+						>
+							<Link
+								to="/dashboard"
+								className="relative z-10 flex items-center gap-2"
+							>
+								Get Started
+								<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+							</Link>
+							<motion.div
+								className="absolute inset-0 bg-linear-to-r from-primary to-secondary"
+								initial={{ x: '100%' }}
+								whileHover={{ x: 0 }}
+								transition={{ duration: 0.3 }}
+							/>
+						</motion.button>
+
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 1, duration: 0.8 }}
+							className="absolute bottom-12 left-1/2 -translate-x-1/2"
+						>
+							<motion.div
+								animate={{ y: [0, 10, 0] }}
+								transition={{ duration: 2, repeat: Infinity }}
+								className="w-6 h-10 border-2 border-foreground/20 rounded-full flex items-start justify-center p-2"
+							>
+								<motion.div
+									animate={{ height: ['20%', '80%', '20%'] }}
+									transition={{ duration: 2, repeat: Infinity }}
+									className="w-1 bg-foreground/40 rounded-full"
+								/>
+							</motion.div>
+						</motion.div>
+					</div>
+				</section>
+
+				<section ref={containerRef} className="py-32 relative overflow-hidden">
+					<div className="max-w-7xl mx-auto px-6">
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.6 }}
+							className="text-center mb-20"
+						>
+							<h2 className="mb-4">How it works</h2>
+							<p className="text-muted-foreground max-w-2xl mx-auto">
+								From concept to execution in four seamless steps
+							</p>
+						</motion.div>
+
+						<div className="relative">
+							<div className="absolute top-1/2 left-0 right-0 h-0.5 bg-border" />
+							<motion.div
+								className="absolute top-1/2 left-0 h-0.5 bg-linear-to-r from-primary to-secondary origin-left"
+								style={{
+									scaleX: useTransform(scrollYProgress, [0.2, 0.8], [0, 1]),
+									width: '100%',
+								}}
+							/>
+
+							{/* Phase nodes */}
+							<div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+								{phases.map((phase, index) => (
+									<motion.div
+										key={phase.id}
+										initial={{ opacity: 0, y: 50 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.5, delay: index * 0.1 }}
+										className="relative"
+									>
+										{/* Node circle */}
+										<motion.div
+											whileHover={{ scale: 1.1 }}
+											className="mx-auto w-24 h-24 rounded-full bg-linear-to-br flex items-center justify-center mb-6 relative"
+											style={{
+												backgroundImage: `linear-gradient(to bottom right, var(--color-${phase.color.split(' ')[0].replace('from-', '')}), var(--color-${phase.color.split(' ')[1].replace('to-', '')}))`,
+											}}
+										>
+											{/* Glow effect */}
+											<motion.div
+												className="absolute inset-0 rounded-full blur-xl opacity-50"
+												style={{
+													backgroundImage: `linear-gradient(to bottom right, var(--color-primary), var(--color-secondary))`,
+												}}
+												animate={{
+													scale: [1, 1.2, 1],
+													opacity: [0.3, 0.6, 0.3],
+												}}
+												transition={{
+													duration: 3,
+													repeat: Infinity,
+													delay: index * 0.5,
+												}}
+											/>
+
+											<phase.icon className="w-10 h-10 text-primary-foreground relative z-10" />
+										</motion.div>
+
+										<div className="text-center">
+											<h3 className="mb-2">{phase.title}</h3>
+											<p className="text-muted-foreground">
+												{phase.description}
+											</p>
+										</div>
+
+										{/* Connector (desktop only) */}
+										{index < phases.length - 1 && (
+											<motion.div
+												className="hidden md:block absolute top-12 left-[calc(50%+3rem)] w-[calc(100%-6rem)] h-0.5"
+												initial={{ scaleX: 0 }}
+												whileInView={{ scaleX: 1 }}
+												viewport={{ once: true }}
+												transition={{ duration: 0.8, delay: index * 0.2 }}
+												style={{
+													background:
+														'linear-gradient(to right, var(--color-primary), var(--color-secondary))',
+													originX: 0,
+												}}
+											/>
+										)}
+									</motion.div>
+								))}
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section ref={containerRef} className="py-32 relative overflow-hidden">
+					<motion.div
+						style={{ opacity, scale }}
+						className="max-w-7xl mx-auto px-6"
+					>
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.6 }}
+							className="text-center mb-20"
+						>
+							<h2 className="mb-4">Built for modern teams</h2>
+							<p className="text-muted-foreground max-w-2xl mx-auto">
+								Everything you need to plan, collaborate, and execute perfect
+								events
+							</p>
+						</motion.div>
+
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+							{features.map((feature, index) => (
+								<motion.div
+									key={feature.title}
+									initial={{ opacity: 0, y: 50 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									viewport={{ once: true }}
+									transition={{ duration: 0.6, delay: index * 0.1 }}
+									whileHover={{ scale: 1.02 }}
+									className="relative p-8 bg-card/50 backdrop-blur-sm border border-border rounded-(--radius) overflow-hidden group"
+								>
+									{/* Glow effect */}
+									<motion.div
+										className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+										style={{
+											background: `linear-gradient(135deg, var(--color-primary)/10, var(--color-secondary)/10)`,
+										}}
+									/>
+
+									{/* Icon */}
+									<motion.div
+										className="relative w-16 h-16 rounded-full bg-linear-to-br flex items-center justify-center mb-6"
+										style={{
+											backgroundImage: `linear-gradient(to bottom right, var(--color-primary), var(--color-secondary))`,
+										}}
+										whileHover={{ rotate: 360 }}
+										transition={{ duration: 0.8 }}
+									>
+										<feature.icon className="w-8 h-8 text-primary-foreground" />
+									</motion.div>
+
+									<div className="relative z-10">
+										<h3 className="mb-3">{feature.title}</h3>
+										<p className="text-muted-foreground">
+											{feature.description}
+										</p>
+									</div>
+
+									{/* Corner accent */}
+									<motion.div
+										className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/20 to-transparent rounded-full blur-3xl"
+										animate={{
+											scale: [1, 1.2, 1],
+											opacity: [0.3, 0.6, 0.3],
+										}}
+										transition={{
+											duration: 4,
+											repeat: Infinity,
+											delay: index * 0.5,
+										}}
+									/>
+								</motion.div>
+							))}
+						</div>
+					</motion.div>
+				</section>
+
+				<motion.section
+					initial={{ opacity: 0 }}
+					whileInView={{ opacity: 1 }}
+					viewport={{ once: true }}
+					className="py-32 relative overflow-hidden"
+				>
+					<div className="relative z-10 max-w-3xl mx-auto text-center px-6">
+						<motion.h2
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							className="mb-6"
+						>
+							Ready to transform your events?
+						</motion.h2>
+						<motion.p
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ delay: 0.1 }}
+							className="text-muted-foreground mb-8"
+						>
+							Join teams who are planning smarter with AI-powered agendas
+						</motion.p>
+						<motion.button
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ delay: 0.2 }}
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className="px-8 py-4 bg-primary text-primary-foreground rounded-(--radius) shadow-lg hover:shadow-xl transition-shadow"
+						>
+							<Link to="/dashboard">Get Started Now</Link>
+						</motion.button>
+					</div>
+				</motion.section>
+			</div>
+		</motion.div>
+	)
 }
