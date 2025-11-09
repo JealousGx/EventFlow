@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.49.0",
+    "@clerk/tanstack-react-start": "^0.26.9",
     "@convex-dev/react-query": "0.0.0-alpha.11",
     "@nanostores/react": "^1.0.0",
     "@radix-ui/react-slot": "^1.2.3",
@@ -21,11 +22,11 @@
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-query": "^5.90.7",
-    "@tanstack/react-router": "^1.132.0",
-    "@tanstack/react-router-devtools": "^1.132.0",
-    "@tanstack/react-router-ssr-query": "^1.131.7",
-    "@tanstack/react-start": "^1.132.0",
-    "@tanstack/router-plugin": "^1.132.0",
+    "@tanstack/react-router": "^1.134.4",
+    "@tanstack/react-router-devtools": "^1.134.4",
+    "@tanstack/react-router-ssr-query": "^1.134.4",
+    "@tanstack/react-start": "1.134.6",
+    "@tanstack/router-plugin": "^1.134.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.27.3",
@@ -35,6 +36,8 @@
     "nanostores": "^1.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "server": "link:@clerk/tanstack-react-start/server",
+    "srvx": "0.8.15",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.0.6",
     "vite-tsconfig-paths": "^5.1.4"
@@ -55,9 +58,13 @@
     "web-vitals": "^5.1.0"
   },
   "overrides": {
+    "srvx": "0.8.15",
     "motion": {
       "react": "^19.2.0",
       "react-dom": "^19.2.0"
     }
+  },
+   "resolutions": {
+    "srvx": "0.8.15"
   }
 }
