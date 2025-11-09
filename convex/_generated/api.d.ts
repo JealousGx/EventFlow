@@ -8,7 +8,8 @@
  * @module
  */
 
-import type * as todos from "../todos.js";
+import type * as events from "../events.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -25,7 +26,8 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  todos: typeof todos;
+  events: typeof events;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
