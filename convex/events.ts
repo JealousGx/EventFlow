@@ -227,6 +227,29 @@ export const updateEvent = mutation({
     isPublic: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
+      .unique()
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const event = await ctx.db.get(args.eventId)
+    if (!event) {
+      throw new Error('Event not found')
+    }
+
+    if (event.ownerId !== user._id) {
+      throw new Error('Not authorized to update this event')
+    }
+
     const { eventId, ...fields } = args
     await ctx.db.patch(eventId, fields)
   },
@@ -235,6 +258,29 @@ export const updateEvent = mutation({
 export const deleteEvent = mutation({
   args: { eventId: v.id('events') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
+      .unique()
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const event = await ctx.db.get(args.eventId)
+    if (!event) {
+      throw new Error('Event not found')
+    }
+
+    if (event.ownerId !== user._id) {
+      throw new Error('Not authorized to delete this event')
+    }
+
     // Delete associated agenda items
     const agendaItems = await ctx.db
       .query('agendaItems')
@@ -285,6 +331,31 @@ export const createAgendaItem = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
+      .unique()
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const participant = await ctx.db
+      .query('participants')
+      .withIndex('by_user_and_event', (q) =>
+        q.eq('userId', user._id).eq('eventId', args.eventId),
+      )
+      .unique()
+
+    if (!participant) {
+      throw new Error('Not authorized to add an agenda item to this event')
+    }
+
     const existingAgendaItems = await ctx.db
       .query('agendaItems')
       .withIndex('by_event_id', (q) => q.eq('eventId', args.eventId))
