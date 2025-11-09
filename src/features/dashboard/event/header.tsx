@@ -1,5 +1,3 @@
-import type { Event } from '@/lib/mock-data'
-import { formatDate, formatTime } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import {
 	ArrowLeft,
@@ -11,12 +9,16 @@ import {
 } from 'lucide-react'
 import { motion } from 'motion/react'
 
+import type { Event } from '@/lib/mock-data'
+import { formatDate, formatTime } from '@/lib/utils'
+
+import { toggleAIDrawer } from '@/stores/ai-drawer'
+
 interface EventHeaderProps {
 	event: Event
-	onAIAssist: () => void
 }
 
-export function EventHeader({ event, onAIAssist }: EventHeaderProps) {
+export function EventHeader({ event }: EventHeaderProps) {
 	return (
 		<div className="relative py-8 mb-8 border-b border-border">
 			{/* Background effects */}
@@ -120,7 +122,7 @@ export function EventHeader({ event, onAIAssist }: EventHeaderProps) {
 						<motion.button
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
-							onClick={onAIAssist}
+							onClick={toggleAIDrawer}
 							className="relative px-6 py-3 bg-primary text-primary-foreground rounded overflow-hidden group"
 						>
 							<span className="relative z-10 flex items-center gap-2">
