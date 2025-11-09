@@ -5,9 +5,9 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Activity, useState } from 'react'
 
 import {
-	createEventModalStore,
-	toggleCreateEventModal,
-} from '@/stores/create-event-modal'
+	eventFormModalStore,
+	toggleEventFormModal,
+} from '@/stores/event-form-modal'
 
 import { api } from '~/convex/_generated/api'
 
@@ -22,8 +22,8 @@ export interface EventFormData {
 	isPublic: boolean
 }
 
-export function CreateEventModal() {
-	const { isOpen } = useStore(createEventModalStore)
+export function EventFormModal() {
+	const { isOpen } = useStore(eventFormModalStore)
 
 	const createEvent = useMutation(api.events.createEvent)
 
@@ -70,7 +70,7 @@ export function CreateEventModal() {
 	}
 
 	const onClose = () => {
-		toggleCreateEventModal()
+		toggleEventFormModal()
 	}
 
 	return (

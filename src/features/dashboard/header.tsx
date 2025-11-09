@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 
 import { ThemeButton } from '@/components/theme'
 
-import { toggleCreateEventModal } from '@/stores/create-event-modal'
+import { toggleEventFormModal } from '@/stores/event-form-modal'
 
 export function DashboardHeader() {
 	return (
@@ -36,7 +36,7 @@ export function DashboardHeader() {
 						<motion.button
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
-							onClick={toggleCreateEventModal}
+							onClick={toggleEventFormModal}
 							className="relative px-6 py-3 bg-primary text-primary-foreground rounded overflow-hidden group"
 						>
 							<span className="relative z-10 flex items-center gap-2">

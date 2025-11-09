@@ -7,8 +7,8 @@ import { useState } from 'react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 import { EventTimelineWrapper } from '@/features/dashboard/events'
-import { CreateEventModal } from '@/features/dashboard/events/create-event-modal'
 import { EmptyState } from '@/features/dashboard/events/empty-state'
+import { EventFormModal } from '@/features/dashboard/events/event-form-modal'
 import { DashboardHeader } from '@/features/dashboard/header'
 
 import { api } from '~/convex/_generated/api'
@@ -102,7 +102,7 @@ function RouteComponent() {
 				})()}
 			</div>
 
-			<CreateEventModal />
+			<EventFormModal />
 		</motion.div>
 	)
 }
