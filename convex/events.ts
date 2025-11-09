@@ -61,10 +61,35 @@ export const createEvent = mutation({
 export const getEvents = query({
   args: {},
   handler: async (ctx) => {
-    const events = await ctx.db.query('events').collect()
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      return []
+    }
+
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
+      .unique()
+
+    if (!user) {
+      return []
+    }
+
+    const userEvents = await ctx.db
+      .query('participants')
+      .withIndex('by_user_id', (q) => q.eq('userId', user._id))
+      .collect()
+
+    const eventIds = userEvents.map((p) => p.eventId)
+
+    const events = await Promise.all(
+      eventIds.map(async (eventId) => await ctx.db.get(eventId)),
+    )
 
     const eventsWithDetails = await Promise.all(
       events.map(async (event) => {
+        if (!event) return null
+
         const agendaItems = await ctx.db
           .query('agendaItems')
           .withIndex('by_event_id', (q) => q.eq('eventId', event._id))
@@ -75,18 +100,20 @@ export const getEvents = query({
           agendaItems.map(async (item) => {
             const votes = await ctx.db
               .query('votes')
-              .withIndex('by_agenda_item_id', (q) => q.eq('agendaItemId', item._id))
+              .withIndex('by_agenda_item_id', (q) =>
+                q.eq('agendaItemId', item._id),
+              )
               .collect()
 
             const votedBy = await Promise.all(
-              votes.map(async (vote) => await ctx.db.get(vote.userId))
+              votes.map(async (vote) => await ctx.db.get(vote.userId)),
             )
             return {
               ...item,
               id: item._id,
-              votedBy: votedBy.map((u) => u ? u.name : 'Unknown' ),
+              votedBy: votedBy.map((u) => (u ? u.name : 'Unknown')),
             }
-          })
+          }),
         )
 
         const participants = await ctx.db
@@ -103,18 +130,44 @@ export const getEvents = query({
       }),
     )
 
-    return eventsWithDetails
+    return eventsWithDetails.filter(Boolean)
   },
 })
 
 export const getEvent = query({
   args: { eventId: v.id('events') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
     const event = await ctx.db.get(args.eventId)
 
     if (!event) {
       throw new Error('Event not found')
     }
+
+      const user = await ctx.db
+        .query('users')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
+        .unique()
+
+      if (!user) {
+        throw new Error('User not found')
+      }
+
+      const participant = await ctx.db
+        .query('participants')
+        .withIndex('by_user_and_event', (q) =>
+          q.eq('userId', user._id).eq('eventId', event._id),
+        )
+        .unique()
+
+      if (!participant) {
+        throw new Error('Not authorized to view this event')
+      }
 
     const agendaItems = await ctx.db
       .query('agendaItems')
@@ -122,23 +175,25 @@ export const getEvent = query({
       .order('asc')
       .collect()
 
-              const agendaItemsWithVotes = await Promise.all(
-          agendaItems.map(async (item) => {
-            const votes = await ctx.db
-              .query('votes')
-              .withIndex('by_agenda_item_id', (q) => q.eq('agendaItemId', item._id))
-              .collect()
+    const agendaItemsWithVotes = await Promise.all(
+      agendaItems.map(async (item) => {
+        const votes = await ctx.db
+          .query('votes')
+          .withIndex('by_agenda_item_id', (q) =>
+            q.eq('agendaItemId', item._id),
+          )
+          .collect()
 
-            const votedBy = await Promise.all(
-              votes.map(async (vote) => await ctx.db.get(vote.userId))
-            )
-            return {
-              ...item,
-              id: item._id,
-              votedBy: votedBy.map((u) => u ? u.name : 'Unknown' ),
-            }
-          })
+        const votedBy = await Promise.all(
+          votes.map(async (vote) => await ctx.db.get(vote.userId)),
         )
+        return {
+          ...item,
+          id: item._id,
+          votedBy: votedBy.map((u) => (u ? u.name : 'Unknown')),
+        }
+      }),
+    )
 
     const participants = await ctx.db
       .query('participants')

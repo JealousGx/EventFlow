@@ -1,5 +1,5 @@
 import { convexQuery } from '@convex-dev/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery } from 'convex/react'
 import { motion } from 'motion/react'
 
@@ -31,6 +31,25 @@ export const Route = createFileRoute('/dashboard/events/$eventId')({
 		)
 	},
 	component: RouteComponent,
+	notFoundComponent: () => {
+		const navigate = useNavigate()
+		return (
+			<div className="flex flex-col items-center justify-center h-full">
+				<h1 className="text-2xl font-bold">Event not found</h1>
+				<p className="text-gray-500">
+					The event you are looking for does not exist or you do not have
+					permission to view it.
+				</p>
+				<button
+					type="button"
+					className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+					onClick={() => navigate({ to: '/dashboard' })}
+				>
+					Go to dashboard
+				</button>
+			</div>
+		)
+	},
 })
 
 function RouteComponent() {
