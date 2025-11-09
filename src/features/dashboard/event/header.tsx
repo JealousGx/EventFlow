@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Activity } from 'react'
 import { motion } from 'motion/react'
+import { toast } from 'sonner'
 
 import { formatDate, formatTime } from '@/lib/utils'
 
@@ -26,6 +27,14 @@ interface EventHeaderProps {
 }
 
 export function EventHeader({ event, canEdit }: EventHeaderProps) {
+	const handleShare = () => {
+		const eventUrl = `${window.location.origin}/dashboard/events/${event.id}`
+		navigator.clipboard.writeText(eventUrl)
+		toast.info('Link copied!', {
+			description: 'The event link has been copied to your clipboard.',
+		})
+	}
+
 	return (
 		<div className="relative py-8 mb-8 border-b border-border">
 			{/* Background effects */}
@@ -133,6 +142,7 @@ export function EventHeader({ event, canEdit }: EventHeaderProps) {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							className="px-6 py-3 bg-card border border-border rounded hover:border-primary transition-colors flex items-center gap-2"
+							onClick={handleShare}
 						>
 							<Share2 className="w-4 h-4" />
 							Share
