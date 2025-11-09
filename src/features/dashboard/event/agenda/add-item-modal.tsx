@@ -36,6 +36,8 @@ export function AddItemModal({ onSave }: AddItemModalProps) {
 			description: '',
 			type: 'discussion',
 		})
+
+		toggleAgendaItem()
 	}
 
 	return (
