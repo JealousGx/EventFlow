@@ -10,9 +10,10 @@ import { AnimatePresence } from 'motion/react'
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary'
 import { NotFound } from '@/components/NotFound'
 
+import { getUserId } from '@/lib/auth'
 import { seo } from '@/lib/seo'
 
-import ClerkProvider from '../integrations/clerk/provider'
+import { AppClerkProvider as ClerkProvider } from '../integrations/clerk/provider'
 import ConvexProvider, {
 	getConvexContext,
 } from '../integrations/convex/provider'
@@ -23,7 +24,18 @@ const { convexQueryClient, queryClient } = getConvexContext()
 export const Route = createRootRouteWithContext<{
 	convexQueryClient: typeof convexQueryClient
 	queryClient: typeof queryClient
+	userId: string | null
 }>()({
+	beforeLoad: async ({ context }) => {
+		const user = await context.queryClient.fetchQuery({
+			queryKey: ['getUserId'],
+			queryFn: getUserId,
+		})
+
+		return {
+			userId: user.isAuthenticated ? user.userId : null,
+		}
+	},
 	head: () => ({
 		meta: [
 			{
@@ -56,8 +68,18 @@ export const Route = createRootRouteWithContext<{
 	},
 
 	notFoundComponent: () => <NotFound />,
-	shellComponent: RootDocument,
+	shellComponent: RootComponent,
 })
+
+function RootComponent({ children }: { children: React.ReactNode }) {
+	return (
+		<ClerkProvider>
+			<ConvexProvider>
+				<RootDocument>{children}</RootDocument>
+			</ConvexProvider>
+		</ClerkProvider>
+	)
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
@@ -66,22 +88,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ConvexProvider>
-					<ClerkProvider>
-						<AnimatePresence mode="wait">{children}</AnimatePresence>
-						<TanStackDevtools
-							config={{
-								position: 'bottom-right',
-							}}
-							plugins={[
-								{
-									name: 'Tanstack Router',
-									render: <TanStackRouterDevtoolsPanel />,
-								},
-							]}
-						/>
-					</ClerkProvider>
-				</ConvexProvider>
+				<AnimatePresence mode="wait">{children}</AnimatePresence>
+				<TanStackDevtools
+					config={{
+						position: 'bottom-right',
+					}}
+					plugins={[
+						{
+							name: 'Tanstack Router',
+							render: <TanStackRouterDevtoolsPanel />,
+						},
+					]}
+				/>
 				<Scripts />
 			</body>
 		</html>
