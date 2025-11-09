@@ -1,20 +1,34 @@
+import { convexQuery } from '@convex-dev/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from 'convex/react'
 import { motion } from 'motion/react'
 import { useState } from 'react'
 
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
+
 import { EventTimelineWrapper } from '@/features/dashboard/events'
+import { CreateEventModal } from '@/features/dashboard/events/create-event-modal'
 import { EmptyState } from '@/features/dashboard/events/empty-state'
 import { DashboardHeader } from '@/features/dashboard/header'
-import { type Event, mockEvents } from '@/lib/mock-data'
+
+import { api } from '~/convex/_generated/api'
 
 export const Route = createFileRoute('/dashboard/')({
+	beforeLoad: async ({ context: { convexQueryClient } }) => {
+		await convexQueryClient.queryClient.ensureQueryData(
+			convexQuery(api.events.getEvents, {}),
+		)
+	},
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	const [events, setEvents] = useState<Event[]>(mockEvents)
-	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+	const events = useQuery(api.events.getEvents)
 	const [activeFilter, setActiveFilter] = useState<string>('All Events')
+
+	if (events === undefined) {
+		return <LoadingSpinner />
+	}
 
 	return (
 		<motion.div
@@ -25,7 +39,7 @@ function RouteComponent() {
 			transition={{ duration: 0.5 }}
 			className="pt-20"
 		>
-			<DashboardHeader onCreateEvent={() => setIsCreateModalOpen(true)} />
+			<DashboardHeader />
 
 			<div className="max-w-7xl mx-auto px-6 pb-20">
 				<motion.div
@@ -83,13 +97,12 @@ function RouteComponent() {
 					return filteredEvents.length > 0 ? (
 						<EventTimelineWrapper events={filteredEvents} />
 					) : (
-						<EmptyState
-							filter={activeFilter}
-							onCreateEvent={() => setIsCreateModalOpen(true)}
-						/>
+						<EmptyState filter={activeFilter} />
 					)
 				})()}
 			</div>
+
+			<CreateEventModal />
 		</motion.div>
 	)
 }
