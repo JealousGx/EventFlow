@@ -6,7 +6,8 @@ export interface AgendaItem {
 	title: string
 	duration: number // in minutes
 	startTime: string
-	description: string
+	endTime?: string
+	description?: string
 	votes: number
 	votedBy: string[]
 	type: 'presentation' | 'discussion' | 'break' | 'activity'
