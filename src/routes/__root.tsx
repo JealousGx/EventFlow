@@ -10,6 +10,7 @@ import { AnimatePresence } from 'motion/react'
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary'
 import { NotFound } from '@/components/NotFound'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { Toaster } from '@/components/ui/sonner'
 
 import { getUserId } from '@/lib/auth'
 import { seo } from '@/lib/seo'
@@ -91,6 +92,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<AnimatePresence mode="wait">{children}</AnimatePresence>
+				<Toaster richColors position="top-right" />
+
 				<TanStackDevtools
 					config={{
 						position: 'bottom-right',
