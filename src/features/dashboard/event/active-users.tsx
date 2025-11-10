@@ -57,7 +57,11 @@ export function ActiveUsers({ users, currentUserId }: ActiveUsersProps) {
 									colors[index % colors.length]
 								} border-2 border-background flex items-center justify-center text-white text-xs relative`}
 							>
-								{user.name.charAt(0).toUpperCase()}
+								<img
+									src={user.avatar}
+									alt={user.name}
+									className="w-full h-full rounded-full object-cover"
+								/>
 
 								{/* Pulse indicator */}
 								<motion.div
