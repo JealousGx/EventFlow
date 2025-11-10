@@ -9,6 +9,7 @@
  */
 
 import type * as agendas from "../agendas.js";
+import type * as ai from "../ai.js";
 import type * as events from "../events.js";
 import type * as http from "../http.js";
 import type * as participants from "../participants.js";
@@ -31,6 +32,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   agendas: typeof agendas;
+  ai: typeof ai;
   events: typeof events;
   http: typeof http;
   participants: typeof participants;

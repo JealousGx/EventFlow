@@ -65,4 +65,13 @@ export default defineSchema({
   })
     .index('by_agenda_item_id', ['agendaItemId'])
     .index('by_user_and_agenda_item', ['userId', 'agendaItemId']),
+
+  aiChatMessages: defineTable({
+    eventId: v.id('events'),
+    userId: v.id('users'),
+    role: v.union(v.literal('user'), v.literal('assistant')),
+    content: v.string(),
+  })
+    .index('by_event_id', ['eventId'])
+    .index('by_user_id', ['userId']),
 })
