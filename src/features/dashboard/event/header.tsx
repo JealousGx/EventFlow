@@ -3,20 +3,20 @@ import {
 	ArrowLeft,
 	Calendar,
 	Clock,
+	Edit,
 	Share2,
 	Sparkles,
-	Users,
 	UserPlus,
-	Edit,
+	Users,
 } from 'lucide-react'
-import { Activity } from 'react'
 import { motion } from 'motion/react'
+import { Activity } from 'react'
 import { toast } from 'sonner'
 
 import { formatDate, formatTime } from '@/lib/utils'
 
-import { toggleAIDrawer } from '@/stores/ai-drawer'
 import { toggleAddParticipantModal } from '@/stores/add-participant-modal'
+import { toggleAIDrawer } from '@/stores/ai-drawer'
 import { toggleEventFormModal } from '@/stores/event-form-modal'
 
 import type { Event } from '@/types'
