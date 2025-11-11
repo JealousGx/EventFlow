@@ -34,9 +34,7 @@ export const getMessages = query({
       .first()
 
     if (!participant || !['owner', 'editor'].includes(participant.role)) {
-      throw new ConvexError(
-        'You must be an owner or editor to view messages.',
-      )
+      return []
     }
 
     const messages = await ctx.db
