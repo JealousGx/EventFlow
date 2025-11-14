@@ -57,7 +57,7 @@ The goal is to move beyond simple event creation. Users define an event (e.g., "
 1. Clone the repository:
 
 ```bash
-git clone [https://github.com/JealousGx/EventFlow.git](https://github.com/JealousGx/EventFlow.git)
+git clone https://github.com/JealousGx/EventFlow.git
 cd EventFlow
 ```
 
@@ -79,8 +79,17 @@ Fill in the necessary values in `.env`.
 
 4. Push the database schema:
 
+For Local:
+
 ```bash
-pnpm db:push
+npx convex dev
+```
+
+For Production:
+
+```bash
+npx convex deploy
+
 ```
 
 5. Run the development server:
